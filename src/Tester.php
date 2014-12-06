@@ -26,29 +26,27 @@ require("SenderClient.php");
 
 
 $message = new SenderClient;
-$message->setServerURL("http://pushserver-tomccart.rhcloud.com/");
-$message->setMasterSecret("539849a6-bbc3-4ead-8bd1-f8f1d712ebeb");
-$message->setPushApplicationID("a915580f-8397-4149-b609-3aacc43c00be");
+$message->setServerURL("http://api.apps.tnetworks.nl/push/"); 
+$message->setMasterSecret("MASTERSECRET");
+$message->setPushApplicationID("APPID");
+$message->addVariant("VARIANT");
 
-$message->addVariant("2951009d-505c-43ad-a983-683d93875947");
-$message->setCategories(array("androidCat", "iOSMouse"));
-
-$message->addAlias("user@account.com");
-
-$message->addDevice("AndroidTablet");
-
-$message->addMessage("key","value");
-$message->addSimplePush("skey", "sval");
+$message->addMessage("alert","AEROGEAR PUSH Test PHP..");
+$message->addMessage("badge",500);
+$message->addMessage("clientIdentifier","PHP Push Api");
+$message->addMessage("sound","default");
 
 $message->sendMessage();
 
 $response = $message->getResponseCode();
 
-if($response == 200)
-{
-	echo "The job has been submitted to the server!";
-}
-else
-{
-	echo "The server returned a response code of " . $response;
-}
+//Removed Response codes because of cron-job execution logging.
+//if($response == 200)
+//{
+//	echo "The job has been submitted to the server!";
+//}
+//else
+//{
+//	echo "The server returned a response code of " . $response;
+//}
+?>
