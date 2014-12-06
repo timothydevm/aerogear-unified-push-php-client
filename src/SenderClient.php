@@ -1,20 +1,4 @@
 <?php
-/*
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 class SenderClient {
 
@@ -27,6 +11,7 @@ class SenderClient {
   private $devices = array();     //strings of device types
   private $messages = array();    //array of key:val arrays
   private $simplePush;
+  private $alert;
   private $ttl;   //time to live in seconds
   private $responseCode;
   private $responseText;
@@ -59,14 +44,14 @@ class SenderClient {
     $con = curl_init($this->serverURL);
   
     curl_setopt($con, CURLOPT_HEADER, 0);
-    curl_setopt($con, CURLOPT_SSLVERSION, 3);           //Allows https or http
+    curl_setopt($con, CURLOPT_SSLVERSION, 1);           //Allows https or http
     curl_setopt($con, CURLOPT_POST, 1);     //POST request
     curl_setopt($con, CURLOPT_RETURNTRANSFER, true);  //hides(t)/shows(f) response (as value of curl_exec)
     curl_setopt($con, CURLOPT_HTTPHEADER, array("Authorization: Basic " .  $credentials,
     'Content-Type: application/json',
     'Accept: application/json'));
     
-    Bitlog::debug('Payload:' . json_encode($this->buildPayload()));
+    json_encode($this->buildPayload());
     curl_setopt($con, CURLOPT_POSTFIELDS, json_encode($this->buildPayload()));
     
     //try to connect to send the payload, throw exception upon failure
@@ -93,9 +78,9 @@ class SenderClient {
             "categories"   =>   $this->categories,
             "alias"        =>   $this->alias,
             "deviceType"   =>   $this->devices,
-            "ttl"      => $this->ttl,
+            "ttl"          => $this->ttl,
             "message"      =>   $this->messages,
-            "simple-push"  =>   $this->simplePush
+            "simple-push"  =>   $this->simplePush,
         );
       } else {
           throw new Exception("At least one message must be submitted.");
@@ -161,6 +146,8 @@ class SenderClient {
         die($e->getMessage());
     }
   }
+ 
+  
   /*  Allows category to be set */
   public function setCategories($categories) {
     $this->categories = $categories;
